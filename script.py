@@ -53,13 +53,20 @@ while True:
         userid_index = resp.find("user-id=") + 9
         user_id = resp[userid_index : resp.find(";", userid_index)]
         message = resp[resp.find(channel) + len(channel) + 2:]
-        if utils.findWholeWord("yep")(message) is not None:
+        if utils.findWholeWord("yepcock")(message) is not None:
             if (len(users.get_user(user_id))) < 1:
                 users.insert_user(user_id)
             users.update_user("yep", user_id)
-            print(user_id + " " + message)
-        if utils.findWholeWord("cock")(message) is not None:
-            if (len(users.get_user(user_id))) < 1:
-                users.insert_user(user_id)
             users.update_user("cock", user_id)
             print(user_id + " " + message)
+        else:
+            if utils.findWholeWord("yep")(message) is not None:
+                if (len(users.get_user(user_id))) < 1:
+                    users.insert_user(user_id)
+                users.update_user("yep", user_id)
+                print(user_id + " " + message)
+            if utils.findWholeWord("cock")(message) is not None:
+                if (len(users.get_user(user_id))) < 1:
+                    users.insert_user(user_id)
+                users.update_user("cock", user_id)
+                print(user_id + " " + message)
