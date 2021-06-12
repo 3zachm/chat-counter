@@ -52,7 +52,7 @@ while True:
         sock.send("PONG\n".encode('utf-8'))
     elif len(resp) > 0:
         resp = demojize(resp)
-        userid_index = resp.find("user-id=") + 9
+        userid_index = resp.find("user-id=") + 8
         user_id = resp[userid_index : resp.find(";", userid_index)]
         message = resp[resp.find(channel) + len(channel) + 2:]
         if utils.findWholeWord("yepcock")(message) is not None:
