@@ -43,6 +43,8 @@ sock.send(f"NICK {nickname}\n".encode('utf-8'))
 sock.send(f"JOIN {channel}\n".encode('utf-8'))
 sock.send("CAP REQ :twitch.tv/tags\n".encode('utf-8'))
 
+print("\nConnected!\n")
+
 while True:
     resp = sock.recv(2048).decode('utf-8')
 

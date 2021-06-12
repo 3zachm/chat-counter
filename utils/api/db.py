@@ -27,10 +27,18 @@ def close():
     db.close()
 
 def execute_val(sql, val):
-    cursor.execute(sql, val)
+    try:
+        cursor.execute(sql, val)
+    except mysql.connector.errors.DatabaseError:
+        initiate()
+        cursor.execute(sql, val)
 
 def execute(sql):
-    cursor.execute(sql)
+    try:
+        cursor.execute(sql)
+    except mysql.connector.errors.DatabaseError:
+        initiate()
+        cursor.execute(sql)
 
 def fetchall():
     return cursor.fetchall()
