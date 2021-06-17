@@ -1,5 +1,4 @@
-import socket
-import logging
+from twitchio.ext import commands
 import os
 import io
 import utils.utils as utils
@@ -33,42 +32,38 @@ except (configparser.NoSectionError, configparser.NoOptionError) as e:
     print("Ensure config file has all entries present. If you recently pulled an update, consider regenerating the config")
     quit()
 
-server = 'irc.chat.twitch.tv'
-port = 6667
 
-sock = socket.socket()
-sock.connect((server, port))
-sock.send(f"PASS {token}\n".encode('utf-8'))
-sock.send(f"NICK {nickname}\n".encode('utf-8'))
-sock.send(f"JOIN {channel}\n".encode('utf-8'))
-sock.send("CAP REQ :twitch.tv/tags\n".encode('utf-8'))
+bot = commands.Bot(
+    irc_token=token,
+    nick=nickname,
+    prefix='!',
+    initial_channels=[channel]
+)
 
-print("\nConnected!\n")
+@bot.event
+async def event_ready():
+    print(f'Ready | {bot.nick}')
 
-while True:
-    resp = sock.recv(2048).decode('utf-8')
-
-    if resp.startswith('PING'):
-        sock.send("PONG\n".encode('utf-8'))
-    elif len(resp) > 0:
-        resp = demojize(resp)
-        userid_index = resp.find("user-id=") + 8
-        user_id = resp[userid_index : resp.find(";", userid_index)]
-        message = resp[resp.find(channel) + len(channel) + 2:]
-        if utils.findWholeWord("yepcock")(message) is not None:
+@bot.event
+async def event_message(message):
+    user_id = str(message.tags['user-id'])
+    if utils.findWholeWord("yepcock")(message.content) is not None:
+        if (len(users.get_user(user_id))) < 1:
+            users.insert_user(user_id)
+        users.update_user("yep", user_id)
+        users.update_user("cock", user_id)
+        print(user_id + " " + message.content)
+    else:
+        if utils.findWholeWord("yep")(message.content) is not None:
             if (len(users.get_user(user_id))) < 1:
                 users.insert_user(user_id)
             users.update_user("yep", user_id)
+            print(user_id + " " + message.content)
+        if utils.findWholeWord("cock")(message.content) is not None:
+            if (len(users.get_user(user_id))) < 1:
+                users.insert_user(user_id)
             users.update_user("cock", user_id)
-            print(user_id + " " + message)
-        else:
-            if utils.findWholeWord("yep")(message) is not None:
-                if (len(users.get_user(user_id))) < 1:
-                    users.insert_user(user_id)
-                users.update_user("yep", user_id)
-                print(user_id + " " + message)
-            if utils.findWholeWord("cock")(message) is not None:
-                if (len(users.get_user(user_id))) < 1:
-                    users.insert_user(user_id)
-                users.update_user("cock", user_id)
-                print(user_id + " " + message)
+            print(user_id + " " + message.content)
+    #await bot.handle_commands(message)
+
+bot.run()
