@@ -44,25 +44,32 @@ bot = commands.Bot(
 async def event_ready():
     print(f'Ready | {bot.nick}')
 
+def inc_user(column, user_id, new_user):
+    if new_user:
+        users.insert_user(user_id)
+    users.update_user(str(column), user_id)
+
 @bot.event
 async def event_message(message):
     user_id = str(message.tags['user-id'])
-    if utils.findWholeWord("yepcock")(message.content) is not None:
-        if (len(users.get_user(user_id))) < 1:
-            users.insert_user(user_id)
-        users.update_user("yep", user_id)
-        users.update_user("cock", user_id)
+    yep = True if utils.findWholeWord("yep")(message.content) is not None else False
+    cock = True if utils.findWholeWord("cock")(message.content) is not None else False
+    yepcock = True if utils.findWholeWord("yepcock")(message.content) is not None else False
+    new_user = True if (len(users.get_user(user_id))) < 1 else False
+    if yep and cock:
+        inc_user("yep", user_id, new_user)
+        inc_user("cock", user_id, new_user)
+        print(user_id + " " + message.content)
+    elif yepcock:
+        inc_user("yep", user_id, new_user)
+        inc_user("cock", user_id, new_user)
         print(user_id + " " + message.content)
     else:
-        if utils.findWholeWord("yep")(message.content) is not None:
-            if (len(users.get_user(user_id))) < 1:
-                users.insert_user(user_id)
-            users.update_user("yep", user_id)
+        if yep:
+            inc_user("yep", user_id, new_user)
             print(user_id + " " + message.content)
-        if utils.findWholeWord("cock")(message.content) is not None:
-            if (len(users.get_user(user_id))) < 1:
-                users.insert_user(user_id)
-            users.update_user("cock", user_id)
+        if cock:
+            inc_user("cock", user_id, new_user)
             print(user_id + " " + message.content)
     #await bot.handle_commands(message)
 
