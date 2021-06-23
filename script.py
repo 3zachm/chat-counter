@@ -56,21 +56,18 @@ async def event_message(message):
     cock = True if utils.findWholeWord("cock")(message.content) is not None else False
     yepcock = True if utils.findWholeWord("yepcock")(message.content) is not None else False
     new_user = True if (len(users.get_user(user_id))) < 1 else False
-    if yep and cock:
+    if yep:
+        inc_user("yep", user_id, new_user)
+        print(user_id + " " + message.content)
+        yepcock = False
+    if cock:
+        inc_user("cock", user_id, new_user)
+        print(user_id + " " + message.content)
+        yepcock = False
+    if yepcock:
         inc_user("yep", user_id, new_user)
         inc_user("cock", user_id, new_user)
         print(user_id + " " + message.content)
-    elif yepcock:
-        inc_user("yep", user_id, new_user)
-        inc_user("cock", user_id, new_user)
-        print(user_id + " " + message.content)
-    else:
-        if yep:
-            inc_user("yep", user_id, new_user)
-            print(user_id + " " + message.content)
-        if cock:
-            inc_user("cock", user_id, new_user)
-            print(user_id + " " + message.content)
     #await bot.handle_commands(message)
 
 bot.run()
