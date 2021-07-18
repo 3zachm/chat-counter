@@ -52,10 +52,10 @@ def inc_user(column, user_id, new_user):
 @bot.event
 async def event_message(message):
     user_id = str(message.tags['user-id'])
-    yep = True if utils.findWholeWord("yep")(message.content) is not None else False
-    cock = True if utils.findWholeWord("cock")(message.content) is not None else False
-    yepcock = True if utils.findWholeWord("yepcock")(message.content) is not None else False
-    new_user = True if (len(users.get_user(user_id))) < 1 else False
+    yep = utils.findWholeWord("yep")(message.content) is not None
+    cock = utils.findWholeWord("cock")(message.content) is not None
+    yepcock = utils.findWholeWord("yepcock")(message.content) is not None
+    new_user = (len(users.get_user(user_id))) < 1
     if yep:
         inc_user("yep", user_id, new_user)
         print(user_id + " " + message.content)
