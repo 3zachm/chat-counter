@@ -53,7 +53,7 @@ def inc_user(column, user_id, new_user):
 @bot.event
 async def event_message(message):
     user_id = str(message.tags['user-id'])
-    log.insert_log(user_id, message.tags['login'], message.content)
+    log.insert_log(user_id, message.author.name, message.content)
     yep = utils.findWholeWord("yep")(message.content) is not None
     cock = utils.findWholeWord("cock")(message.content) is not None
     yepcock = utils.findWholeWord("yepcock")(message.content) is not None
