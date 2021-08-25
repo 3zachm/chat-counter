@@ -6,6 +6,7 @@ import configparser
 import utils.file_manager as files
 import utils.api.db as sql
 import utils.user_db as users
+import utils.log_db as log
 from emoji import demojize
 
 # set script_dir to proper path in the files script (for file locations)
@@ -52,6 +53,7 @@ def inc_user(column, user_id, new_user):
 @bot.event
 async def event_message(message):
     user_id = str(message.tags['user-id'])
+    log.insert_log(user_id, message.content)
     yep = utils.findWholeWord("yep")(message.content) is not None
     cock = utils.findWholeWord("cock")(message.content) is not None
     yepcock = utils.findWholeWord("yepcock")(message.content) is not None
