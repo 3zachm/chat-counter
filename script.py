@@ -48,7 +48,7 @@ async def event_message(message):
     user_id = str(message.tags['user-id'])
     log.insert_log(user_id, message.author.name, message.content, message.tags)
     # not worth using the command decorator for this, update to new twitchio if needed later cause it no longer uses irc logins
-    if (message.tags['mod'] == '1' or message.tags['badges'].find('broadcaster') != -1) and message.content == '!nukelogpoints':
+    if (message.tags['mod'] == 1 or message.tags['badges'].find('broadcaster') != -1) and message.content == '!nukelogpoints':
         await message.channel.send('!gamble all')
 
 bot.run()
