@@ -43,13 +43,12 @@ async def event_ready():
 
 @bot.event
 async def event_message(message):
+    if message.author.name.lower() == bot.nick.lower():
+        return
     user_id = str(message.tags['user-id'])
     log.insert_log(user_id, message.author.name, message.content, message.tags)
-    if message.tags['mod'] == '1':
-        await bot.handle_commands(message)
-
-@bot.command(name='nukelogpoints')
-async def nukelogpoints(ctx):
-    await ctx.send('!gamble all')
+    # not worth using the command decorator for this, update to new twitchio if needed later cause it no longer uses irc logins
+    if (message.tags['mod'] == '1' or message.tags['badges'].find('broadcaster') != -1) and message.content == '!nukelogpoints':
+        await message.channel.send('!gamble all')
 
 bot.run()
