@@ -1,0 +1,50 @@
+version: 0.6
+
+index_id: anny-logs
+
+doc_mapping:
+  mode: strict
+  field_mappings:
+    - name: timestamp
+      description: timestamp of the message
+      type: datetime
+      fast: true
+      input_formats:
+        - rfc3339
+        - unix_timestamp
+      precision: seconds
+    - name: user_id
+      description: twitch user id
+      type: u64
+    - name: user_name
+      type: text
+      record: freq
+      fast: true
+      tokenizer: raw
+    - name: message
+      description: message content
+      type: text
+      tokenizer: default
+      record: position
+      fieldnorms: true
+      fast:
+        normalizer: lowercase
+    - name: badges
+      description: badges of the user (csv)
+      type: text
+      tokenizer: raw
+    - name: is_mod
+      type: bool
+    - name: is_sub
+      type: bool
+    - name: is_turbo
+      type: bool
+    - name: color
+      type: text
+  timestamp_field: timestamp
+
+search_settings:
+  default_search_fields: [message]
+
+indexing_settings:
+  commit_timeout_secs: 30

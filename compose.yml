@@ -1,0 +1,10 @@
+version: '3'
+services:
+  quickwit:
+    image: quickwit/quickwit
+    restart: always
+    command: run
+    ports:
+      - "127.0.0.1:7280:7280"
+    volumes:
+      - ./qwdata:/quickwit/qwdata
