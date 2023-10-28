@@ -22,7 +22,8 @@ try:
     index = config.get('quickwit', 'index')
 except (configparser.NoSectionError, configparser.NoOptionError) as e:
     print(e)
-    print("Ensure config file has all entries present. If you recently pulled an update, consider regenerating the config")
+    print("Ensure config file has all entries present."
+          "If you recently pulled an update, consider regenerating the config")
     quit()
 
 bot = commands.Bot(
@@ -32,9 +33,12 @@ bot = commands.Bot(
     initial_channels=[channel]
 )
 ingest_url = f'http://{host}/api/v1/{index}/ingest'
+
+
 @bot.event
 async def event_ready():
     print(f'Ready | {bot.nick}')
+
 
 @bot.event
 async def event_message(message):
@@ -53,8 +57,11 @@ async def event_message(message):
         "color": message.tags['color']
     }
     await bot.http._session.post(ingest_url, data=json.dumps(body))
-    # not worth using the command decorator for this, update to new twitchio if needed later cause it no longer uses irc logins
-    if (message.tags['mod'] == 1 or message.tags['badges'].find('broadcaster') != -1) and message.content == '!nukelogpoints':
+    # not worth using the command decorator for this
+    if (
+            (message.tags['mod'] == 1 or message.tags['badges'].find('broadcaster') != -1)
+            and message.content == '!nukelogpoints'
+       ):
         await message.channel.send('!gamble all')
 
 bot.run()

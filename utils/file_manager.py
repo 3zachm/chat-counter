@@ -3,8 +3,10 @@ import os
 
 script_dir = ''
 
+
 def config_loc():
     return script_dir + '/config.ini'
+
 
 def make_config(path):
     config = configparser.ConfigParser()
