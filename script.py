@@ -1,4 +1,5 @@
 import json
+import aiohttp
 from twitchio.ext import commands
 import os
 import io
@@ -15,7 +16,7 @@ config.read_file(io.StringIO(config_file))
 
 # make sure config file is properly filled
 try:
-    channel = config.get('twitch', 'channel')
+    channels = config.get('twitch', 'channels').split()
     token = config.get('twitch', 'token')
     nickname = config.get('twitch', 'username')
     host = config.get('quickwit', 'host')
@@ -30,7 +31,7 @@ bot = commands.Bot(
     irc_token=token,
     nick=nickname,
     prefix='!',
-    initial_channels=[channel]
+    initial_channels=channels
 )
 ingest_url = f'http://{host}/api/v1/{index}/ingest'
 
@@ -56,12 +57,9 @@ async def event_message(message):
         "is_turbo": message.tags['turbo'] == 1,
         "color": message.tags['color']
     }
-    await bot.http._session.post(ingest_url, data=json.dumps(body))
-    # not worth using the command decorator for this
-    if (
-            (message.tags['mod'] == 1 or message.tags['badges'].find('broadcaster') != -1)
-            and message.content == '!nukelogpoints'
-       ):
-        await message.channel.send('!gamble all')
+    async with aiohttp.ClientSession() as session:
+        async with session.post(ingest_url, data=json.dumps(body)) as resp:
+            if resp.status != 200:
+                print(f"Failed to ingest message: {await resp.text()}")
 
 bot.run()

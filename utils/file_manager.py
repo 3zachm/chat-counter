@@ -13,7 +13,7 @@ def make_config(path):
     if not os.path.exists(path):
         config['twitch'] = {
             'token': '',
-            'channel': '',
+            'channels': '',
             'username': ''}
         config['quickwit'] = {
             'host': 'localhost:7280',

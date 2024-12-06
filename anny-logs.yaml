@@ -13,6 +13,12 @@ doc_mapping:
         - rfc3339
         - unix_timestamp
       precision: seconds
+    - name: channel
+      description: twitch channel name
+      type: text
+      record: position
+      fast: true
+      tokenizer: raw
     - name: user_id
       description: twitch user id
       type: u64
