@@ -48,6 +48,7 @@ async def event_message(message):
     # POST request to /ingest with json body
     body = {
         "timestamp": message.tags['tmi-sent-ts'],
+        "channel": str(message.channel),
         "user_id": message.tags['user-id'],
         "user_name": message.author.name,
         "message": message.content,
